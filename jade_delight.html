@@ -1,7 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Jade Delight</title>
 <style>
 	body{
@@ -28,13 +27,13 @@
 
 		if (user_lname == "") {
 			alert("Please enter last name.");
-			document.data.lname.focus(); // move cursor
-			return false; // prevent form action
+			document.data.lname.focus();
+			return false;
 		}
 		if (valid_phonenumber(telephone_input)==false){
 			alert("Must enter a valid phone number");
 			document.data.phone.focus();
-			return false; // prevent form action
+			return false;
 		}
 
 		if (document.data.p_or_d[1].checked == true){
@@ -112,9 +111,9 @@
 		menuItems = new Array(
 			new MenuItem("Chicken Chop Suey", 4.5),
 			new MenuItem("Sweet and Sour Pork", 6.25),
-			new MenuItem("Shrimp Lo Mein", 5.25),
-			new MenuItem("Moo Shi Chicken", 6.5),
-			new MenuItem("Fried Rice", 2.35)
+			new MenuItem("Shrimp Lo Mein", 6.25),
+			new MenuItem("Moo Shi Chicken", 7.5),
+			new MenuItem("Fried Rice", 2.85)
 		);
 
 		function makeSelect(name, minRange, maxRange){
@@ -164,66 +163,62 @@
 			});
 		});
 	</script>
+<form name = "data" onsubmit = "return validate()">
+	<p class="userInfo"><label>First Name:</label> <input type="text"  name='fname' /></p>
+	<p class="userInfo"><label>Last Name*</label>:  <input type="text"  name='lname' /></p>
+	<p class="userInfo address"><label>Street*</label>: <input type="text" name='street' /></p>
+	<p class="userInfo address"><label>City*</label>: <input type="text" name='city' /></p>
+	<p class="userInfo"><label>Phone*</label>: <input type="text"  name='phone' /></p>
 
-	<form name = "data" onsubmit="return validate()">
-		<p>First Name: <input type="text"  name='fname' /></p>
-		<p>Last Name*:  <input type="text"  name='lname' /></p>
-		<p class="address">Street: <input type="text"  name='street' /></p>
-		<p class="address">City: <input type="text"  name='city' /></p>
-		<p>Phone*: <input type="text"  name='phone' /></p>
-		<p>
-			<input name="p_or_d" type="radio" value = "pickup" checked="checked"/>Pickup
-			<br><br>
-			<input name="p_or_d" type="radio"  value = 'delivery'/>Delivery
-		</p>
+	<input type="radio"  name="p_or_d" value = "pickup" checked="checked"/>Pickup
+	<br><br>
+	<input type="radio"  name='p_or_d' value = 'delivery'/>
+	Delivery
+</p>
+<table border="0" cellpadding="3">
+  <tr>
+    <th>Select Item</th>
+    <th>Item Name</th>
+    <th>Cost Each</th>
+    <th>Total Cost</th>
+  </tr>
+<script>
+  var s = "";
+  for (i=0; i< menuItems.length; i++)
+  {
+	  s += "<tr>";
+	  s += td(makeSelect("quan" + i, 0, 10),"selectQuantity");
+	  s += td(menuItems[i].name, "itemName");
+	  s += td("$" +menuItems[i].cost.toFixed(2), "cost");
+	  s += td("$<input type='text' name='cost'/>", "totalCost");
+	  s+= "</tr>";
+  }
+  document.writeln(s);
+</script>
+</table>
+<p class="subtotal totalSection"><label>Subtotal</label>:
+   $ <input type="text"  name='subtotal' id="subtotal" />
+</p>
+<p class="tax totalSection"><label>Mass tax 6.25%:</label>
+  $ <input type="text"  name='tax' id="tax" />
+</p>
+<p clas="total totalSection"><label>Total:</label> $ <input type="text"  name='total' id="total" />
+</p>
+<input type = "button" value = "Submit Order" />
 
-		<br><br>
+<script language="javascript">
+	for (i=0; i< menuItems.length; i++){
+		document.getElementsByName("quan"+i)[0].onchange = function() {
+			name = this.name;
+			i = name.substring(4);
+			x = document.getElementsByName("quan"+i)[0].selectedIndex;
+			price_each = menuItems[i].cost.toFixed(2);
+			document.getElementsByName("cost")[i].value = (x*price_each).toFixed(2);
 
-		<table cellpadding="5">
-		  <tr>
-		    <th>Select Item</th>
-		    <th>Item Name</th>
-		    <th>Cost Each</th>
-		    <th>Total Cost</th>
-		  </tr>
-
-			<script language="javascript">
-			  s = "";
-			  for (i=0; i< menuItems.length; i++){
-				  s += "<tr><td>";
-				  s += makeSelect("quan" + i, 0, 10);
-				  s += "</td><td>" + menuItems[i].name + "</td>";
-				  s += "<td> $ " + menuItems[i].cost.toFixed(2) + "</td>";
-				  s += "<td>$<input type='text' name='cost'/></td></tr>";
-			  }
-			  document.writeln(s);
-			</script>
-		</table>
-
-		<p>Subtotal:
-		   $<input type="text"  name='subtotal' id="subtotal" />
-		</p>
-		<p> Massachusetts State Tax: 6.25%:
-		  $ <input type="text"  name='tax' id="tax" />
-		</p>
-		<p>Total:
-			$ <input type="text"  name='total' id="total" />
-		</p>
-		<input type = "submit" value = "Submit Order" />
-	</form>
-
-	<script language="javascript">
-		for (i = 0; i< menuItems.length; i++){
-			document.getElementsByName("quan"+i)[0].onchange = function() {
-				name=this.name;
-				temp = name.substring(4);
-				temp2 = document.getElementsByName("quan" + temp2)[0].selectedIndex;
-				price_each = menuItems[temp].cost.toFixed(2);
-				document.getElementsByName("cost")[temp].value = (temp2 * price_each).toFixed(2);
-				compute();
-			}
+			compute();
 		}
-	</script>
-
+	}
+</script>
+</form>
 </body>
 </html>
