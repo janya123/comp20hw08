@@ -185,6 +185,7 @@
 <script>
   var s = "";
   for (i=0; i< menuItems.length; i++)
+	subtotal_temp = 0, tax_temp = 0, total_temp = 0;
   {
 	  s += "<tr>";
 	  s += td(makeSelect("quan" + i, 0, 10),"selectQuantity");
